@@ -1,31 +1,30 @@
-use std::fs::File;
-use std::io::{BufRead, BufReader};
 use sysinfo::System;
 
+#[cfg(target_os = "android")]
 fn getprop(property: &str) -> Option<String> {
-	let prop_files = [
-		"/system/build.prop",
-		"/product/build.prop",
-		"/vendor/build.prop",
-		"/default.prop",
-	];
-	for path in prop_files {
-		if let Ok(file) = File::open(path) {
-			let reader = BufReader::new(file);
-			for line in reader.lines().map_while(Result::ok) {
-				let trimmed = line.trim();
-				if trimmed.starts_with('#') || !trimmed.contains('=') {
-					continue;
-				}
-				match trimmed.split_once('=') {
-					Some((key, value)) if key.trim() == property => {
-						return Some(value.trim().to_string());
-					}
-					_ => {}
-				}
-			}
-		}
+	use std::ffi::{CStr, CString};
+	use std::os::raw::{c_char, c_int};
+
+	const PROP_VALUE_MAX: usize = 92;
+
+	extern "C" {
+		fn __system_property_get(name: *const c_char, value: *mut c_char) -> c_int;
 	}
+
+	let name = CString::new(property).ok()?;
+	let mut buf = [0 as c_char; PROP_VALUE_MAX];
+
+	let len = unsafe { __system_property_get(name.as_ptr(), buf.as_mut_ptr()) };
+	if len <= 0 {
+		return None;
+	}
+
+	let value = unsafe { CStr::from_ptr(buf.as_ptr()) };
+	Some(value.to_string_lossy().into_owned())
+}
+
+#[cfg(not(target_os = "android"))]
+fn getprop(_property: &str) -> Option<String> {
 	None
 }
 
