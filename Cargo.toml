@@ -1,5 +1,5 @@
 [package]
-name = "sprout"
+name = "sprout-prober"
 version = "0.1.0"
 edition = "2024"
 description = "sprout - system probe output"

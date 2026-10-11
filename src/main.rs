@@ -127,7 +127,7 @@ fn main() {
 	println!("CPU:    {} {} {}c/{}t", model, arch, cores, threads);
 	println!(
 		"Prober: {} {}",
-		env!("CARGO_PKG_NAME"),
+		env!("CARGO_BIN_NAME"),
 		env!("CARGO_PKG_VERSION")
 	);
 	println!("Uptime: {}", uptime);
