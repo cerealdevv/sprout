@@ -67,7 +67,7 @@ fn main() {
 			.unwrap_or_default()
 			.to_lowercase();
 		let build_user = getprop("ro.build.user").unwrap_or_default().to_lowercase();
-		if getprop("ro.lineage.version").is_some() || getprop("ro.lineage.device").is_some() {
+		if getprop("ro.lineage.version").is_some() || getprop("ro.lineage.device").is_some() || display_id.contains("lineage") {
 			let lineage_ver = getprop("ro.lineage.version").unwrap_or_default();
 			osname = format!("LineageOS {} (Android ", lineage_ver);
 			osver = format!("{})", osver);
