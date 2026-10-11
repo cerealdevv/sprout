@@ -164,10 +164,20 @@ fn main() {
 		println!("SDK:    {}", retsdk)
 	}
 	println!("CPU:    {} {} {}c/{}t", model, arch, cores, threads);
-	println!(
-		"Prober: {} {}",
-		env!("CARGO_BIN_NAME"),
-		env!("CARGO_PKG_VERSION")
-	);
+	let source = env!("SPROUT_SOURCE");
+	if source.is_empty() {
+		println!(
+			"Prober: {} {}",
+			env!("CARGO_BIN_NAME"),
+			env!("CARGO_PKG_VERSION")
+		);
+	} else {
+		println!(
+			"Prober: {} {}-{}",
+			env!("CARGO_BIN_NAME"),
+			env!("CARGO_PKG_VERSION"),
+			source
+		)
+	}
 	println!("Uptime: {}", uptime);
 }
