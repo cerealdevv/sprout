@@ -11,6 +11,7 @@ categories = ["command-line-utilities", "development-tools::debugging", "os"]
 
 [[bin]]
 name = "sprout"
+path = "src/main.rs"
 
 [dependencies]
 sysinfo = "0.39.6"
