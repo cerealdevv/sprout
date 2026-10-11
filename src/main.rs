@@ -56,29 +56,36 @@ fn main() {
 	let cores = System::physical_core_count()
 		.map(|c| c.to_string())
 		.unwrap_or_else(|| "Unknown".to_string());
-	let mut model = "Generic CPU";
+	let mut model = String::from("Generic CPU");
 	if let Some(global_cpu) = sys.cpus().first() {
-		model = global_cpu.brand();
+		model = global_cpu.brand().to_string();
 	}
 	let mut osname = System::name().unwrap_or_else(|| "Linux".to_string());
 	let mut osver = System::os_version().unwrap_or_default();
 	if rawkerneltype == "android" {
+		let cpu_manufacturer =
+			getprop("ro.soc.manufacturer").unwrap_or_else(|| "Generic".to_string());
+		let cpu_name = getprop("ro.soc.model").unwrap_or_else(|| "CPU".to_string());
+		model = format!("{} {}", cpu_manufacturer, cpu_name);
 		let display_id = getprop("ro.build.display.id")
 			.unwrap_or_default()
 			.to_lowercase();
 		let build_user = getprop("ro.build.user").unwrap_or_default().to_lowercase();
-		if getprop("ro.lineage.version").is_some() || getprop("ro.lineage.device").is_some() || display_id.contains("lineage") {
+		if getprop("ro.lineage.version").is_some()
+			|| getprop("ro.lineage.device").is_some()
+			|| display_id.contains("lineage")
+		{
 			let lineage_ver = getprop("ro.lineage.version").unwrap_or_default();
-			osname = format!("LineageOS {} (Android ", lineage_ver);
-			osver = format!("{})", osver);
+			osname = format!("LineageOS {}", lineage_ver);
+			osver = format!("(Android {})", osver);
 		} else if build_user == "grapheneos" || display_id.contains("grapheneos") {
 			let gos_ver = getprop("ro.build.version.incremental").unwrap_or_default();
-			osname = format!("GrapheneOS {} (Android ", gos_ver);
-			osver = format!("{})", osver);
+			osname = format!("GrapheneOS {}", gos_ver);
+			osver = format!("(Android {})", osver);
 		} else if getprop("ro.calyxos.version").is_some() || display_id.contains("calyxos") {
 			let calyx_ver = getprop("ro.calyxos.version").unwrap_or_default();
-			osname = format!("CalyxOS {} (Android ", calyx_ver);
-			osver = format!("{})", osver);
+			osname = format!("CalyxOS {}", calyx_ver);
+			osver = format!("(Android {})", osver);
 		} else {
 			osname = "Android".to_string();
 		}
