@@ -35,6 +35,28 @@ fn rom_name(name: &str, version_prop: &str) -> String {
 	}
 }
 
+fn format_uptime(secs: u64) -> String {
+	fn unit(n: u64, name: &str) -> String {
+		if n == 1 {
+			format!("{} {}", n, name)
+		} else {
+			format!("{} {}s", n, name)
+		}
+	}
+	if secs < 60 {
+		return unit(secs, "sec");
+	}
+	let days = secs / 86400;
+	let hours = secs % 86400 / 3600;
+	let mins = secs % 3600 / 60;
+	[(days, "day"), (hours, "hour"), (mins, "min")]
+		.iter()
+		.filter(|(n, _)| *n > 0)
+		.map(|(n, name)| unit(*n, name))
+		.collect::<Vec<_>>()
+		.join(", ")
+}
+
 fn main() {
 	let rawkerneltype = std::env::consts::OS;
 	let kerneltype = match rawkerneltype {
@@ -99,7 +121,14 @@ fn main() {
 		}
 	}
 	osver = osver.replace("rolling", "").trim().to_string();
+	let uptime = format_uptime(System::uptime());
 	println!("OS:     {} {}", osname, osver);
 	println!("Kernel: {} {}", kerneltype, kernel);
-	println!("CPU:    {} {} {}c/{}t", model, arch, cores, threads)
+	println!("CPU:    {} {} {}c/{}t", model, arch, cores, threads);
+	println!(
+		"Prober: {} {}",
+		env!("CARGO_PKG_NAME"),
+		env!("CARGO_PKG_VERSION")
+	);
+	println!("Uptime: {}", uptime);
 }
