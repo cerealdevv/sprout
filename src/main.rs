@@ -1,4 +1,33 @@
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 use sysinfo::System;
+
+fn getprop(property: &str) -> Option<String> {
+	let prop_files = [
+		"/system/build.prop",
+		"/product/build.prop",
+		"/vendor/build.prop",
+		"/default.prop",
+	];
+	for path in prop_files {
+		if let Ok(file) = File::open(path) {
+			let reader = BufReader::new(file);
+			for line in reader.lines().map_while(Result::ok) {
+				let trimmed = line.trim();
+				if trimmed.starts_with('#') || !trimmed.contains('=') {
+					continue;
+				}
+				match trimmed.split_once('=') {
+					Some((key, value)) if key.trim() == property => {
+						return Some(value.trim().to_string());
+					}
+					_ => {}
+				}
+			}
+		}
+	}
+	None
+}
 
 fn main() {
 	let rawkerneltype = std::env::consts::OS;
@@ -31,8 +60,29 @@ fn main() {
 	if let Some(global_cpu) = sys.cpus().first() {
 		model = global_cpu.brand();
 	}
-	let osname = System::name().unwrap_or_else(|| "Linux".to_string());
+	let mut osname = System::name().unwrap_or_else(|| "Linux".to_string());
 	let mut osver = System::os_version().unwrap_or_default();
+	if rawkerneltype == "android" {
+		let display_id = getprop("ro.build.display.id")
+			.unwrap_or_default()
+			.to_lowercase();
+		let build_user = getprop("ro.build.user").unwrap_or_default().to_lowercase();
+		if getprop("ro.lineage.version").is_some() || getprop("ro.lineage.device").is_some() {
+			let lineage_ver = getprop("ro.lineage.version").unwrap_or_default();
+			osname = format!("LineageOS {} (Android ", lineage_ver);
+			osver = format!("{})", osver);
+		} else if build_user == "grapheneos" || display_id.contains("grapheneos") {
+			let gos_ver = getprop("ro.build.version.incremental").unwrap_or_default();
+			osname = format!("GrapheneOS {} (Android ", gos_ver);
+			osver = format!("{})", osver);
+		} else if getprop("ro.calyxos.version").is_some() || display_id.contains("calyxos") {
+			let calyx_ver = getprop("ro.calyxos.version").unwrap_or_default();
+			osname = format!("CalyxOS {} (Android ", calyx_ver);
+			osver = format!("{})", osver);
+		} else {
+			osname = "Android".to_string();
+		}
+	}
 	osver = osver.replace("rolling", "").trim().to_string();
 	println!("OS:     {} {}", osname, osver);
 	println!("Kernel: {} {}", kerneltype, kernel);
