@@ -161,7 +161,7 @@ fn main() {
 	if rawkerneltype == "android"
 		&& let Some(retsdk) = android_version_mismatch()
 	{
-		println!("SDK:   {}", retsdk)
+		println!("SDK:    {}", retsdk)
 	}
 	println!("CPU:    {} {} {}c/{}t", model, arch, cores, threads);
 	println!(
