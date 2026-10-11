@@ -28,6 +28,13 @@ fn getprop(_property: &str) -> Option<String> {
 	None
 }
 
+fn rom_name(name: &str, version_prop: &str) -> String {
+	match getprop(version_prop).filter(|v| !v.is_empty()) {
+		Some(v) => format!("{} {}", name, v),
+		None => name.to_string(),
+	}
+}
+
 fn main() {
 	let rawkerneltype = std::env::consts::OS;
 	let kerneltype = match rawkerneltype {
@@ -70,23 +77,25 @@ fn main() {
 			.unwrap_or_default()
 			.to_lowercase();
 		let build_user = getprop("ro.build.user").unwrap_or_default().to_lowercase();
-		if getprop("ro.lineage.version").is_some()
+		let rom = if getprop("ro.lineage.version").is_some()
 			|| getprop("ro.lineage.device").is_some()
 			|| display_id.contains("lineage")
 		{
-			let lineage_ver = getprop("ro.lineage.version").unwrap_or_default();
-			osname = format!("LineageOS {}", lineage_ver);
-			osver = format!("(Android {})", osver);
+			Some(rom_name("LineageOS", "ro.lineage.version"))
 		} else if build_user == "grapheneos" || display_id.contains("grapheneos") {
-			let gos_ver = getprop("ro.build.version.incremental").unwrap_or_default();
-			osname = format!("GrapheneOS {}", gos_ver);
-			osver = format!("(Android {})", osver);
+			Some(rom_name("GrapheneOS", "ro.build.version.incremental"))
 		} else if getprop("ro.calyxos.version").is_some() || display_id.contains("calyxos") {
-			let calyx_ver = getprop("ro.calyxos.version").unwrap_or_default();
-			osname = format!("CalyxOS {}", calyx_ver);
-			osver = format!("(Android {})", osver);
+			Some(rom_name("CalyxOS", "ro.calyxos.version"))
 		} else {
-			osname = "Android".to_string();
+			None
+		};
+
+		match rom {
+			Some(name) => {
+				osname = name;
+				osver = format!("(Android {})", osver);
+			}
+			None => osname = "Android".to_string(),
 		}
 	}
 	osver = osver.replace("rolling", "").trim().to_string();
