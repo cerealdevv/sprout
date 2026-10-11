@@ -2,6 +2,15 @@
 name = "sprout"
 version = "0.1.0"
 edition = "2024"
+description = "sprout - system probe output"
+license = "GPL-3.0-only"
+repository = "https://codeberg.org/cerealdevv/sprout"
+readme = "README.md"
+keywords = ["system-info", "diagnostics", "debugging", "probe", "cross-platform"]
+categories = ["command-line-utilities", "development-tools::debugging", "os"]
+
+[[bin]]
+name = "sprout"
 
 [dependencies]
 sysinfo = "0.39.6"
