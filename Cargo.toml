@@ -8,6 +8,7 @@ repository = "https://codeberg.org/cerealdevv/sprout"
 readme = "README.md"
 keywords = ["system-info", "diagnostics", "debugging", "probe", "cross-platform"]
 categories = ["command-line-utilities", "development-tools::debugging", "os"]
+exclude = ["makefile", "rustfmt.toml", ".gitignore", "CONTRIBUTING.md"]
 
 [[bin]]
 name = "sprout"
@@ -18,3 +19,4 @@ sysinfo = "0.39.6"
 
 [features]
 default = []
+
