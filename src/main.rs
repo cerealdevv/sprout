@@ -7,7 +7,7 @@ fn getprop(property: &str) -> Option<String> {
 
 	const PROP_VALUE_MAX: usize = 92;
 
-	extern "C" {
+	unsafe extern "C" {
 		fn __system_property_get(name: *const c_char, value: *mut c_char) -> c_int;
 	}
 
