@@ -17,7 +17,7 @@ is an underlying issue with architecture/libc/os
 ├─────────────────┼────────────┼─────────┼────────────┼──────────┼─────────┤
 │Arch Linux       │x86_64      │glibc    │yes         │officially│rolling  │
 ├─────────────────┼────────────┼─────────┼────────────┼──────────┼─────────┤
-│Android 17       │aarch64     │37/Bionic│yes         │officially│0.1      │
+│Android 17       │aarch64     │37/Bionic│yes         │officially│0.2-wip  │
 ├─────────────────┼────────────┼─────────┼────────────┼──────────┼─────────┤
 │Android 15       │aarch64     │35/Bionic│yes         │officially│0.1      │
 ├─────────────────┼────────────┼─────────┼────────────┼──────────┼─────────┤
