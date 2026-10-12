@@ -91,6 +91,14 @@ fn android_version_mismatch() -> Option<String> {
 	}
 }
 
+fn capitalize(s: &str) -> String {
+	let mut chars = s.chars();
+	match chars.next() {
+		Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
+		None => String::new(),
+	}
+}
+
 fn main() {
 	let rawkerneltype = std::env::consts::OS;
 	let kerneltype = match rawkerneltype {
@@ -103,10 +111,11 @@ fn main() {
 		"wasi" => "WASI".to_string(), // okay, why?
 		"uefi" => "UEFI".to_string(), // okay, how?
 		other => {
-			let mut chars = other.chars();
-			match chars.next() {
-				None => "Unknown".to_string(),
-				Some(first) => format!("{}{}", first.to_uppercase(), chars.as_str()),
+			let s = capitalize(other);
+			if s.is_empty() {
+				"Unknown".to_string()
+			} else {
+				s
 			}
 		}
 	};
@@ -155,6 +164,9 @@ fn main() {
 		}
 	}
 	osver = osver.replace("rolling", "").trim().to_string();
+	let mut xdg_desktop = std::env::var("XDG_CURRENT_DESKTOP").unwrap_or_default();
+	let mut xdg_desktop_type = std::env::var("XDG_BACKEND").unwrap_or_default();
+	xdg_desktop_type = capitalize(&xdg_desktop_type);
 	let uptime = format_uptime(System::uptime());
 	println!("OS:     {} {}", osname, osver);
 	println!("Kernel: {} {}", kerneltype, kernel);
@@ -162,6 +174,12 @@ fn main() {
 		&& let Some(retsdk) = android_version_mismatch()
 	{
 		println!("SDK:    {}", retsdk)
+	}
+	if !xdg_desktop.is_empty() {
+		if !xdg_desktop_type.is_empty() {
+			xdg_desktop = format!("{} ({})", xdg_desktop, xdg_desktop_type)
+		}
+		println!("DE:     {}", xdg_desktop);
 	}
 	println!("CPU:    {} {} {}c/{}t", model, arch, cores, threads);
 	let source = env!("SPROUT_SOURCE");
