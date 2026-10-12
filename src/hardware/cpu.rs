@@ -5,7 +5,7 @@ use crate::util::android::getprop;
 use sysinfo::System;
 
 #[cfg(target_os = "android")]
-pub fn line() -> String {
+pub fn line(_sys: &sysinfo::System) -> String {
 	let cpu_manufacturer = getprop("ro.soc.manufacturer").unwrap_or_else(|| "Generic".to_string());
 	let cpu_name = getprop("ro.soc.model").unwrap_or_else(|| "CPU".to_string());
 	format!("{} {}", cpu_manufacturer, cpu_name)
