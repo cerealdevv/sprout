@@ -100,7 +100,7 @@ pub fn line(#[cfg_attr(not(unix), allow(unused_variables))] sys: &mut System) ->
 		})
 	}
 
-	#[cfg(any(target_os = "linux", target_os = "android"))]
+	#[cfg(target_os = "linux")]
 	{
 		wayland_wm(sys)
 			.map(|name| Wm {
@@ -111,6 +111,27 @@ pub fn line(#[cfg_attr(not(unix), allow(unused_variables))] sys: &mut System) ->
 				x11_wm(sys).map(|name| Wm {
 					name,
 					server: Some("X11"),
+				})
+			})
+	}
+
+	#[cfg(target_os = "android")]
+	{
+		wayland_wm(sys)
+			.map(|name| Wm {
+				name,
+				server: Some("Wayland"),
+			})
+			.or_else(|| {
+				x11_wm(sys).map(|name| Wm {
+					name,
+					server: Some("X11"),
+				})
+			})
+			.or_else(|| {
+				Some(Wm {
+					name: "SurfaceFlinger".into(),
+					server: None,
 				})
 			})
 	}
