@@ -155,7 +155,7 @@ dependencies = [
 
 [[package]]
 name = "sprout-prober"
-version = "0.2.0-wip"
+version = "0.2.0"
 dependencies = [
  "rustix",
  "sysinfo",
