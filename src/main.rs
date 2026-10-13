@@ -31,6 +31,7 @@ fn main() {
 		("Kernel", Some(os::kernel::line())),
 		("Init", os::init::line(&mut sys)),
 		("SDK", sdk),
+		("Libc", os::libc::line()),
 		("DE", de),
 		("WM", wm),
 		("CPU", Some(hardware::cpu::line(&sys))),
