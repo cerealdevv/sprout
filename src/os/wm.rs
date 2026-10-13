@@ -9,6 +9,43 @@ use sysinfo::System;
 ))]
 use crate::util::general::comm;
 
+const KNOWN_WMS: &[(&str, &str)] = &[
+	("kwin", "KWin"),
+	("gnome-shell", "Mutter"),
+	("gnome shell", "Mutter"),
+	("mutter", "Mutter"),
+	("cinnamon", "Muffin"),
+	("muffin", "Muffin"),
+	("marco", "Marco"),
+	("xfwm", "Xfwm"),
+	("budgie-wm", "Budgie WM"),
+	("gala", "Gala"),
+	("cosmic-comp", "COSMIC Comp"),
+	("enlightenment", "Enlightenment"),
+	("compiz", "Compiz"),
+	("metacity", "Metacity"),
+	("xmonad", "XMonad"),
+	("hyprland", "Hyprland"),
+	("phoc", "Phoc"),
+];
+
+fn strip_wrapper(raw: &str) -> &str {
+	let s = raw.strip_prefix('.').unwrap_or(raw);
+	s.strip_suffix("-wrapped")
+		.or_else(|| s.strip_suffix("-real"))
+		.unwrap_or(s)
+}
+
+fn pretty_wm(raw: &str) -> String {
+	let raw = strip_wrapper(raw);
+	let lower = raw.to_lowercase();
+	KNOWN_WMS
+		.iter()
+		.find(|(pat, _)| lower.contains(pat))
+		.map(|(_, pretty)| (*pretty).to_string())
+		.unwrap_or_else(|| raw.to_owned())
+}
+
 // technically android can run wayland via termux
 #[cfg(any(target_os = "linux", target_os = "android"))]
 fn wayland_wm(sys: &mut System) -> Option<String> {
@@ -83,7 +120,14 @@ pub struct Wm {
 	pub server: Option<&'static str>,
 }
 
-pub fn line(#[cfg_attr(not(unix), allow(unused_variables))] sys: &mut System) -> Option<Wm> {
+pub fn line(sys: &mut System) -> Option<Wm> {
+	detect(sys).map(|mut wm| {
+		wm.name = pretty_wm(&wm.name);
+		wm
+	})
+}
+
+fn detect(#[allow(unused_variables)] sys: &mut System) -> Option<Wm> {
 	#[cfg(target_os = "windows")]
 	{
 		Some(Wm {
