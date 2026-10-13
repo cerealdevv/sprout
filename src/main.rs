@@ -29,6 +29,7 @@ fn main() {
 	let lines = [
 		("OS", Some(os::name::line())),
 		("Kernel", Some(os::kernel::line())),
+		("Init", os::init::line(&mut sys)),
 		("SDK", sdk),
 		("DE", de),
 		("WM", wm),

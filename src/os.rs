@@ -1,4 +1,5 @@
 pub mod desktop;
+pub mod init;
 pub mod kernel;
 pub mod name;
 #[cfg(target_os = "android")]
