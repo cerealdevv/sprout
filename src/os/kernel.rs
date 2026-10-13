@@ -8,6 +8,7 @@ pub fn line() -> String {
 		"netbsd" => "NetBSD".to_string(),
 		"openbsd" => "OpenBSD".to_string(),
 		"android" => "Android (Linux)".to_string(),
+		"hurd" => "GNU Hurd".to_string(),
 		"wasi" => "WASI".to_string(), // okay, why?
 		"uefi" => "UEFI".to_string(), // okay, how?
 		other => {
