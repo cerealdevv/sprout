@@ -15,7 +15,9 @@ name = "sprout"
 path = "src/main.rs"
 
 [dependencies]
+rustix = "1.1.5"
 sysinfo = "0.39.6"
+x11rb = "0.14.0"
 
 [features]
 default = []

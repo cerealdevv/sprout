@@ -1,5 +1,3 @@
-// pls make WM/DE detection destinct later on
-
 #[cfg(target_os = "windows")]
 fn de() -> Option<String> {
 	Some("Windows Explorer".to_string())
@@ -17,18 +15,8 @@ fn de() -> Option<String> {
 
 #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "ios")))]
 fn de() -> Option<String> {
-	use crate::util::general::capitalize;
-	use std::env;
-	let desktop = env::var("XDG_CURRENT_DESKTOP").unwrap_or_default();
-	if desktop.is_empty() {
-		return None;
-	}
-	let server = capitalize(&env::var("XDG_SESSION_TYPE").unwrap_or_default());
-	if server.is_empty() {
-		Some(desktop)
-	} else {
-		Some(format!("{} ({})", desktop, server))
-	}
+	let desktop = std::env::var("XDG_CURRENT_DESKTOP").unwrap_or_default();
+	(!desktop.is_empty()).then_some(desktop)
 }
 
 pub fn line() -> Option<String> {

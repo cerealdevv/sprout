@@ -13,12 +13,25 @@ fn main() {
 	let sdk = os::sdk::line();
 	#[cfg(not(target_os = "android"))]
 	let sdk: Option<String> = None;
+	let de = os::desktop::line();
+	let wm = os::wm::line(&mut sys);
+
+	let de = match (de, &wm) {
+		(Some(d), Some(w)) if d.eq_ignore_ascii_case(&w.name) => None,
+		(d, _) => d,
+	};
+
+	let wm = wm.map(|w| match w.server {
+		Some(s) => format!("{} ({s})", w.name),
+		None => w.name,
+	});
 
 	let lines = [
 		("OS", Some(os::name::line())),
 		("Kernel", Some(os::kernel::line())),
 		("SDK", sdk),
-		("DE", os::desktop::line()),
+		("DE", de),
+		("WM", wm),
 		("CPU", Some(hardware::cpu::line(&sys))),
 		("Prober", Some(misc::prober::line())),
 		("Uptime", Some(misc::uptime::line())),
