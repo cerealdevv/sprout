@@ -1,3 +1,5 @@
+use std::{env, path::PathBuf};
+
 pub fn getprop(property: &str) -> Option<String> {
 	use std::ffi::{CStr, CString};
 	use std::os::raw::{c_char, c_int};
@@ -18,4 +20,15 @@ pub fn getprop(property: &str) -> Option<String> {
 
 	let value = unsafe { CStr::from_ptr(buf.as_ptr()) };
 	Some(value.to_string_lossy().into_owned())
+}
+
+fn find(name: &str) -> Option<PathBuf> {
+	let mut dirs: Vec<PathBuf> = env::var_os("PATH")
+		.map(|p| env::split_paths(&p).collect())
+		.unwrap_or_default();
+	dirs.push(PathBuf::from("/data/data/com.termux/files/usr/bin"));
+	dirs.push(PathBuf::from("/system/bin"));
+	dirs.push(PathBuf::from("/system/xbin"));
+
+	dirs.into_iter().map(|d| d.join(name)).find(|p| p.is_file())
 }

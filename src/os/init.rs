@@ -2,7 +2,12 @@ use sysinfo::System;
 
 #[cfg(target_os = "android")]
 fn fetch_init(_sys: &mut System) -> Option<String> {
-	Some("Android Init".into())
+	use crate::util::android::find;
+	if find("runit").is_some() {
+		Some("Android Init + runit".into())
+	} else {
+		Some("Android Init".into())
+	}
 }
 
 #[cfg(any(target_os = "freebsd", target_os = "openbsd", target_os = "dragonfly"))]
