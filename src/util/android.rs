@@ -22,7 +22,7 @@ pub fn getprop(property: &str) -> Option<String> {
 	Some(value.to_string_lossy().into_owned())
 }
 
-fn find(name: &str) -> Option<PathBuf> {
+pub fn find(name: &str) -> Option<PathBuf> {
 	let mut dirs: Vec<PathBuf> = env::var_os("PATH")
 		.map(|p| env::split_paths(&p).collect())
 		.unwrap_or_default();
