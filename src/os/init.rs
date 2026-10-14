@@ -3,7 +3,7 @@ use sysinfo::System;
 #[cfg(target_os = "android")]
 fn fetch_init(_sys: &mut System) -> Option<String> {
 	use crate::util::android::find;
-	if find("runit").is_some() {
+	if find("runsv").is_some() {
 		Some("Android Init + runit".into())
 	} else {
 		Some("Android Init".into())
