@@ -37,11 +37,22 @@ fn main() {
 		("CPU", Some(hardware::cpu::line(&sys))),
 		("Prober", Some(misc::prober::line())),
 		("Uptime", Some(misc::uptime::line())),
+		("Root Wrapper", misc::rootwrapper::line(&mut sys)),
 	];
-
+	let padding_width = lines
+		.iter()
+		.filter(|(_, value)| value.is_some())
+		.map(|(label, _)| label.len() + 2)
+		.max()
+		.unwrap_or(0);
 	for (label, value) in lines {
 		if let Some(v) = value {
-			println!("{:<8}{}", format!("{label}:"), v);
+			println!(
+				"{:<width$}{}",
+				format!("{label}:"),
+				v,
+				width = padding_width
+			);
 		}
 	}
 }
