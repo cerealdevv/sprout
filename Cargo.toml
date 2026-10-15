@@ -16,6 +16,7 @@ path = "src/main.rs"
 
 [dependencies]
 rustix = { version = "1.1.5", features=["process"] }
+toml = { version = "0.8", default-features = false, features = ["parse"] }
 sysinfo = "0.39.6"
 x11rb = "0.14.0"
 
