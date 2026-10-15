@@ -4,7 +4,7 @@ pub fn line() -> String {
 		format!("{} {}", env!("CARGO_BIN_NAME"), env!("CARGO_PKG_VERSION"))
 	} else {
 		format!(
-			"{} {}-{}",
+			"{} v{}-{}",
 			env!("CARGO_BIN_NAME"),
 			env!("CARGO_PKG_VERSION"),
 			source
