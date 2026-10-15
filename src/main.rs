@@ -32,6 +32,7 @@ fn main() {
 		("Init", os::init::line(&mut sys)),
 		("SDK", sdk),
 		("Libc", os::libc::line()),
+		("Shell", misc::shell::line()),
 		("Project", misc::git::line()),
 		("DE", de),
 		("WM", wm),
