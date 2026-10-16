@@ -70,6 +70,7 @@ fn fetch(_sys: &mut System) -> Option<String> {
 	None
 }
 
+#[cfg(unix)]
 pub fn line(sys: &mut System) -> Option<String> {
 	fetch(sys)
 }
