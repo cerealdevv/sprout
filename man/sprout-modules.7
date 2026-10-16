@@ -1,0 +1,57 @@
+.TH SPROUT-MODULES 7 "October 2026" "sprout v0.3.0-wip" "Miscellaneous"
+.SH NAME
+sprout-modules \- modules available in sprout
+.SH MODULES
+.TP
+.B OS
+pretty self explanatory, your OS name & version, detection on most operating systems is done via sysinfo,
+however on custom android roms, it is fetched from rom specific build.prop values.
+.TP
+.B Kernel
+fetches the kernel name & version from std::env::consts::OS and the sysinfo crate
+.TP
+.B Init
+fetches the init system of your operating system, for most OSes this is hardcoded, for linux we check
+/proc/1/comm, and on android we check for the existance of runsv before deciding wether to display
+exclusively "Android Init" or "Android Init + runit"
+.TP
+.B SDK
+android exclusive, checks the SDK version via getprop, warns when SDK/android version are mismatched.
+.TP
+.B Libc
+on most operating systems, this is hardcoded, however on linux its a little different, as theres
+2 major libcs.
+.TP
+.B Shell
+shell detection is currently not properly supported on non POSIX or POSIX-like shells.
+the shell is fetched via $SHELL, which is unfortunately not always accurate.
+.TP
+.B Project
+fetches basic information about the git repository youre in, currently only parses python and rust
+projects.
+.TP
+.B DE
+queries $XDG_CURRENT_DESKTOP for your desktop environment, is hidden when DE and WM are the same.
+.TP
+.B WM
+fetching the WM is slightly more complicated, this module is the reason we depend on X11RB, displays
+wether your window manager is X11 or Wayland, on non BSD & Linux systems, this is hardcoded.
+.TP
+.B CPU
+utilizes the sysinfo crate to fetch CPU name, core/thread count and checks architecture
+.TP
+.B Prober
+fetches information about the Prober, in this case SPROUT, displaying the binary name, followed by
+v{major}.{minor}.{release}-{tag}, note that the tag is optional, and is fetched from compile time
+variables or other information
+.TP
+.B Uptime
+fetches uptime and formats it in x days, y hours, z mins, falls back to x seconds if less than a minute
+of uptime.
+.TP
+.B Root Wrapper
+detects which root wrapper was used to run SPROUT, for most wrappers it just checks the parent process,
+for su and runuser it checks the parent of the parent process (since they spawn a shell).
+for pkexec and run0 it detects the environment variables $PKEXEC_UID and $SHELL_PROMPT_PREFIX respectively.
+.SH SEE ALSO
+.BR sprout (1)
