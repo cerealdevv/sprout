@@ -3,7 +3,7 @@ use toml::Table;
 
 type LangFetcher = fn() -> Option<String>;
 
-const LANGUAGES: &[LangFetcher] = &[fetch_rust, fetch_python, fetch_aur];
+const LANGUAGES: &[LangFetcher] = &[fetch_rust, fetch_python, fetch_aur, fetch_csharp];
 
 fn fetch() -> Vec<String> {
 	if !matches!(fs::exists(".git"), Ok(true)) {
@@ -50,6 +50,28 @@ fn pkgbuild_var(content: &str, key: &str) -> Option<String> {
 		let value = value.trim_matches(|c| c == '"' || c == '\'');
 		(!value.is_empty()).then(|| value.to_string())
 	})
+}
+
+fn fetch_csharp() -> Option<String> {
+	let path = fs::read_dir(".")
+		.ok()?
+		.filter_map(Result::ok)
+		.map(|e| e.path())
+		.find(|p| p.extension().is_some_and(|ext| ext == "csproj"))?;
+	let name = path.file_stem()?.to_str()?;
+	let content = fs::read_to_string(&path).ok()?;
+	let version =
+		xml_tag(&content, "InformationalVersion").or_else(|| xml_tag(&content, "Version"))?;
+	Some(format!("{name} v{version} (C#)"))
+}
+
+fn xml_tag(content: &str, tag: &str) -> Option<String> {
+	let open = format!("<{tag}>");
+	let close = format!("</{tag}>");
+	let start = content.find(&open)? + open.len();
+	let end = start + content[start..].find(&close)?;
+	let value = content[start..end].trim();
+	(!value.is_empty() && !value.contains('$')).then(|| value.to_string())
 }
 
 pub fn line() -> Option<String> {
