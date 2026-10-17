@@ -62,7 +62,7 @@ fn fallback_fetch() -> Option<String> {
 	let v = |k: &str| env::var(k).ok().filter(|s| !s.is_empty());
 	#[cfg(target_os = "android")]
 	if let Some(termux_version) = v("TERMUX_VERSION") {
-		return Some(format!("Termux {ver}"));
+		return Some(format!("Termux {termux_version}"));
 	}
 	#[cfg(target_os = "android")]
 	if v("PREFIX").is_some_and(|p| p.contains("com.termux")) {
