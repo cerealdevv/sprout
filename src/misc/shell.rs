@@ -22,7 +22,8 @@ pub fn line(sys: &mut System) -> Option<String> {
 		}
 		pid = parent_pid(pid)?;
 		let name = comm(sys, pid)?;
-		if name.ends_with("sh") {
+		if name.ends_with("sh") || name.ends_with("shell") || name == "nu" {
+			// deliberate exclusion of lua, python, etc, theyre not shells.
 			return Some(name);
 		}
 	}
