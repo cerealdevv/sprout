@@ -5,6 +5,6 @@ fmt:
 clippy:
 	cargo clippy --all-targets --all-features -- -D warnings
 test:
-	cargo test
+	# cargo test # we dont have any unittests here, so ignore it.
 format:
 	cargo fmt
