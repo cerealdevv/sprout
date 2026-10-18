@@ -22,20 +22,21 @@ most official packaging attempts.
 stay simple, never connect to any peer (central server or direct
 peer-to-peer), and avoid fetching information that might be deemed sensitive
 (username, hostname, IP, ...).
-.SH CRYPTIC PR DENIALS AND ISSUE CLOSING
-.IP \(bu 2
-.B SOUP
-\- System Output, Unneeded Presentation; don't add configs or other
-unnecessary styling, we are not a fetch.
-.IP \(bu 2
-.B SNIFF
-\- SPROUT's Not Imitating FastFetch; again, we are not a fetch. don't call it that.
-.IP \(bu 2
-.B LURK
-\- Live Under Required KISS; KISS isn't optional.
-.IP \(bu 2
-.B LINA
-\- Lowercase Is Not Accidental; lowercased documentation is the preferred style of documentation,
-it makes it look calmer, and less hyper-professional.
+.SH WHAT NOT TO INCLUDE IN A PR
+.TP
+.B We are not UNIX porn.
+SPROUT is not just another UNIX porn fetch utility, you should avoid comparing
+it to tools like fastfetch, neofetch, macchina or otherwise.
+.TP
+.B Functionality >> Presentation
+SPROUT should ALWAYS be simple to use, and should not try to be beautiful, it is
+not intended to be the pretty thing in the corner that doesn't improve productivity
+in any way, instead, it is intended to help you attach relevant information to PRs or
+issues, to help make bugs easier to reproduce or diagnose.
+.TP
+.B Documentation "fixes"
+SPROUT documentation is in all lowercase, while you may think that is a mistake, it
+is not. it is intended to look less "corporate" or "professional" than other projects.
+please do not open PRs or issues attempting to "fix" casing.
 .SH SEE ALSO
 .BR sprout-modules (7)
