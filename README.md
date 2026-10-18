@@ -33,3 +33,14 @@ is an underlying issue with architecture/libc/os
 
 ## i tested sprout on a different OS, how can i contribute to the list?
 to contribute to the list, please open an issue with the relevant information.
+
+## sprout versioning
+sprout operates on a slightly different versioning than most other programs, therefore
+i would like to clear up some confusion.
+
+### sprouts versioning
+sprout v0.3 implies that there were major changes since v0.2, but they werent significant enough to knock it
+into v1.0. by the time its v1.0, its had so many changes that comparing it to v0.1 is like comparing an elephant
+to a mouse.
+sprout uses development suffixes, -wip for example implies that its not a release build, while -AUR or -cargo help you
+figure out where your sprout is from, to make it easier to check if the package maintainers had modified your version.
