@@ -1,6 +1,6 @@
 [package]
 name = "sprout-prober"
-version = "0.3.0-wip"
+version = "0.3.0"
 edition = "2024"
 description = "sprout - system probe output"
 license = "GPL-3.0-only"
@@ -8,7 +8,7 @@ repository = "https://codeberg.org/cerealdevv/sprout"
 readme = "README.md"
 keywords = ["system-info", "diagnostics", "debugging", "probe", "cross-platform"]
 categories = ["command-line-utilities", "development-tools::debugging", "os"]
-exclude = ["makefile", "rustfmt.toml", ".gitignore", "CONTRIBUTING.md"]
+exclude = ["makefile", "rustfmt.toml", ".gitignore", "CONTRIBUTING.md", "PACKAGING.md"]
 
 [[bin]]
 name = "sprout"
