@@ -1,7 +1,6 @@
 # SPROUT Packaging standards
 
-CRUSH is a shell, therefore packaging is an integral part of distribution of the project.
-as such, CRUSH has some packaging standards.
+SPROUT has some packaging standards, although they're not too strict.
 
 ## Changes
 changes to sprout in packaging should be discussed with maintainers and the project owner.
