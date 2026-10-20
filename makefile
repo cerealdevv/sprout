@@ -32,13 +32,17 @@ install: build
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/sprout
-
+	
+.ONESHELL:
 commit:
-	echo "this feature is only for NON RELEASE commits."
-	echo "this feature depends on cargo-edit, please make sure it is installed."
-	echo "press enter to confirm that this is NOT a release and you have cargo-edit installed."
-	read
-	git add .
-	read -rp "please enter a commit name: " cmt
+	echo "This feature is only for NON RELEASE commits."
+	echo "This feature depends on cargo-edit. Please make sure it is installed."
+	read -r -p "Press enter to confirm this is NOT a release and cargo-edit is installed. "
 	cargo set-version --bump patch
-	git commit -m "$cmt"
+	git add .
+	read -r -p "Please enter a commit name: " cmt
+	if [ -z "$$cmt" ]; then
+		echo "Commit message cannot be empty."
+		exit 1
+	fi
+	git commit -m "$$cmt"
