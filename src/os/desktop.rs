@@ -15,7 +15,11 @@ fn de() -> Option<String> {
 
 #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "ios")))]
 fn de() -> Option<String> {
-	let desktop = std::env::var("XDG_CURRENT_DESKTOP").unwrap_or_default();
+	let desktop = std::env::var("XDG_CURRENT_DESKTOP")
+		.ok()?
+		.strip_suffix(":wlroots")
+		.unwrap_or_default()
+		.to_string();
 	(!desktop.is_empty()).then_some(desktop)
 }
 
