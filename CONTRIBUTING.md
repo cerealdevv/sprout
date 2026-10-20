@@ -69,3 +69,5 @@ please remember that WIP is not allowed in the branch MAIN and should be resolve
 your PR.
 allowing/expecting dead code or other things to bypass CI should not be in a PR.
 your PR will not be accepted if it includes CI bypasses, until your CI bypasses are resolved.
+
+you should use make commit for all your commits, or at least manually bump the PATCH field.
