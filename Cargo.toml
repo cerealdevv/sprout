@@ -19,10 +19,11 @@ rustix = { version = "1.1.5", features=["process"] }
 toml = { version = "0.8", default-features = false, features = ["parse"] }
 sysinfo = "0.39.6"
 x11rb = { version = "0.14.0", optional = true }
+clap = { version = "4.6.7", default-features = false, features = ["std", "help", "usage", "error-context"], optional = true }
 
 [features]
 default = ["verbosity", "x11"]
 nox11 = ["verbosity"] # all defaults EXCEPT x11, not reccomended outside of non UNIX, wayland or apple systems.
-flags = [] # note that certain features DEPEND on flags, you should not explicitly disable flags when compiling with a flag dependant feature.
+flags = ["dep:clap"] # note that certain features DEPEND on flags, you should not explicitly disable flags when compiling with a flag dependant feature.
 verbosity = ["flags"] # this feature adds the -v flag, which otherwise is not included.
 x11 = ["dep:x11rb"]

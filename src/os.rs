@@ -1,4 +1,6 @@
 pub mod desktop;
+#[cfg(feature = "verbosity")]
+pub mod family;
 pub mod init;
 pub mod kernel;
 pub mod libc;

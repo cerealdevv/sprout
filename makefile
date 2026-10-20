@@ -17,7 +17,7 @@ clippy:
 	cargo clippy --all-targets --all-features -- -D warnings
 
 test:
-	echo "SPROUT has no unittests as of v0.3-wip"
+	cargo test
 
 format:
 	cargo fmt

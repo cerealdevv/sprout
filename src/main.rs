@@ -1,8 +1,10 @@
+mod flags;
 mod hardware;
 mod misc;
 mod os;
 mod util;
 
+use flags::flag_set;
 use sysinfo::System;
 
 fn main() {
@@ -25,9 +27,10 @@ fn main() {
 		Some(s) => format!("{} ({s})", w.name),
 		None => w.name,
 	});
-
 	let lines = [
 		("OS", Some(os::name::line())),
+		#[cfg(feature = "verbosity")]
+		("OS Family", flag_set('v').then(os::family::line).flatten()),
 		("Kernel", Some(os::kernel::line())),
 		("Init", os::init::line(&mut sys)),
 		("SDK", sdk),
