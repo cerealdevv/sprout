@@ -53,6 +53,7 @@ for example these:
 - security: fix vulnerability
 - chore: cleaning up, initializing, whatever
 - WIP: working on x, not allowed in branch: MAIN
+- packaging: changes for packaging
 
 the following prefixes are reserved for the project owner:
 - style: change project style (i.e. hard tabs > four spaced indent)
