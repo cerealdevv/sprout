@@ -6,8 +6,24 @@ mod util;
 
 use flags::flag_set;
 use sysinfo::System;
-
 fn main() {
+	if flag_set('V') {
+		let x11 = cfg!(feature = "x11");
+		let verbosity = cfg!(feature = "verbosity");
+		let preset = if cfg!(feature = "default") {
+			"Default"
+		} else if cfg!(feature = "nox11") {
+			"No X11"
+		} else {
+			"Custom"
+		};
+		println!("Prober:    {}", misc::prober::line());
+		println!("Preset:    {preset}");
+		println!("X11:       {x11}");
+		println!("Verbosity: {verbosity}");
+		println!("Flags:     true");
+		return;
+	}
 	let mut sys = System::new();
 	sys.refresh_cpu_all();
 
