@@ -39,8 +39,7 @@ sprout operates on a slightly different versioning than most other programs, the
 i would like to clear up some confusion.
 
 ### sprouts versioning
-sprout v0.3 implies that there were major changes since v0.2, but they werent significant enough to knock it
-into v1.0. by the time its v1.0, its had so many changes that comparing it to v0.1 is like comparing an elephant
-to a mouse.
-sprout uses development suffixes, -wip for example implies that its not a release build, while -AUR or -cargo help you
-figure out where your sprout is from, to make it easier to check if the package maintainers had modified your version.
+sprout has recently changes its versioning behind the scenes, the public facing version is still v0.3,
+however, to make nix packaging easier, we have dropped the -wip prefix officially, now, in development
+versions change the PATCH field of the cargo version, it changes after each commit and resets to zero
+after a MINOR or MAJOR field change.

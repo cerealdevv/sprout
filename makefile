@@ -6,7 +6,7 @@ BIN := target/release/sprout
 export SPROUT_SOURCE
 
 .SILENT:
-.PHONY: check fmt clippy test format build install uninstall
+.PHONY: check fmt clippy test format build install uninstall commit
 
 check: fmt clippy test
 
@@ -32,3 +32,13 @@ install: build
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/sprout
+
+commit:
+	echo "this feature is only for NON RELEASE commits."
+	echo "this feature depends on cargo-edit, please make sure it is installed."
+	echo "press enter to confirm that this is NOT a release and you have cargo-edit installed."
+	read
+	git add .
+	read -rp "please enter a commit name: " cmt
+	cargo set-version --bump patch
+	git commit -m "$cmt"
