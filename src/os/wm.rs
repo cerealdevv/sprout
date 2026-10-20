@@ -3,9 +3,10 @@ use sysinfo::System;
 #[cfg(any(
 	target_os = "linux",
 	target_os = "android",
-	target_os = "freebsd",
-	target_os = "openbsd",
-	target_os = "netbsd"
+	all(
+		any(target_os = "freebsd", target_os = "openbsd", target_os = "netbsd"),
+		feature = "x11"
+	)
 ))]
 use crate::util::general::comm;
 
@@ -64,12 +65,15 @@ fn wayland_wm(sys: &mut System) -> Option<String> {
 	comm(sys, cred.pid.as_raw_nonzero().get() as u32)
 }
 
-#[cfg(any(
-	target_os = "linux",
-	target_os = "android",
-	target_os = "freebsd",
-	target_os = "openbsd",
-	target_os = "netbsd"
+#[cfg(all(
+	any(
+		target_os = "linux",
+		target_os = "android",
+		target_os = "freebsd",
+		target_os = "openbsd",
+		target_os = "netbsd"
+	),
+	feature = "x11"
 ))]
 fn x11_wm(sys: &mut System) -> Option<String> {
 	use x11rb::connection::Connection;
@@ -144,50 +148,49 @@ fn detect(#[allow(unused_variables)] sys: &mut System) -> Option<Wm> {
 		})
 	}
 
-	#[cfg(target_os = "linux")]
+	#[cfg(any(target_os = "linux", target_os = "android"))]
 	{
-		wayland_wm(sys)
-			.map(|name| Wm {
+		let wm = wayland_wm(sys).map(|name| Wm {
+			name,
+			server: Some("Wayland"),
+		});
+
+		#[cfg(feature = "x11")]
+		let wm = wm.or_else(|| {
+			x11_wm(sys).map(|name| Wm {
 				name,
-				server: Some("Wayland"),
+				server: Some("X11"),
 			})
-			.or_else(|| {
-				x11_wm(sys).map(|name| Wm {
-					name,
-					server: Some("X11"),
-				})
+		});
+
+		#[cfg(target_os = "android")]
+		let wm = wm.or_else(|| {
+			Some(Wm {
+				name: "SurfaceFlinger".into(),
+				server: None,
 			})
+		});
+
+		wm
 	}
 
-	#[cfg(target_os = "android")]
-	{
-		wayland_wm(sys)
-			.map(|name| Wm {
-				name,
-				server: Some("Wayland"),
-			})
-			.or_else(|| {
-				x11_wm(sys).map(|name| Wm {
-					name,
-					server: Some("X11"),
-				})
-			})
-			.or_else(|| {
-				Some(Wm {
-					name: "SurfaceFlinger".into(),
-					server: None,
-				})
-			})
-	}
-
-	#[cfg(any(target_os = "freebsd", target_os = "openbsd", target_os = "netbsd"))]
+	#[cfg(all(
+		any(target_os = "freebsd", target_os = "openbsd", target_os = "netbsd"),
+		feature = "x11"
+	))]
 	{
 		x11_wm(sys).map(|name| Wm {
 			name,
 			server: Some("X11"),
 		})
 	}
-
+	#[cfg(all(
+		any(target_os = "freebsd", target_os = "openbsd", target_os = "netbsd"),
+		not(feature = "x11")
+	))]
+	{
+		None
+	}
 	#[cfg(not(any(
 		target_os = "windows",
 		target_os = "macos",
