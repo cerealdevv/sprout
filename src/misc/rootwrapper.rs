@@ -3,9 +3,10 @@ use sysinfo::System;
 #[cfg(unix)]
 fn fetch(sys: &mut System) -> Option<String> {
 	use crate::util::general::comm;
+	use crate::util::unix::is_root;
 	use std::env;
-	if rustix::process::geteuid().is_root() {
-		let ppid = rustix::process::getppid()?.as_raw_pid() as u32;
+	if is_root() {
+		let ppid = std::os::unix::process::parent_id();
 		let parent_name = comm(sys, ppid);
 		let mut target_name = parent_name.as_deref().unwrap_or("");
 		let g_name;
