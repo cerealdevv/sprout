@@ -8,7 +8,7 @@ repository = "https://codeberg.org/cerealdevv/sprout"
 readme = "README.md"
 keywords = ["system-info", "diagnostics", "debugging", "probe", "cross-platform"]
 categories = ["command-line-utilities", "development-tools::debugging", "os"]
-exclude = ["makefile", "rustfmt.toml", ".gitignore", "CONTRIBUTING.md", "PACKAGING.md"]
+exclude = ["makefile", "rustfmt.toml", ".gitignore", "CONTRIBUTING.md", "PACKAGING.md", "flake.lock", "flake.nix", "package.nix", "default.nix"]
 
 [[bin]]
 name = "sprout"
