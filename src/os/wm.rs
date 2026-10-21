@@ -1,10 +1,15 @@
 use sysinfo::System;
 
 #[cfg(any(
-	target_os = "linux",
-	target_os = "android",
+	all(any(target_os = "linux", target_os = "android"), feature = "wayland"),
 	all(
-		any(target_os = "freebsd", target_os = "openbsd", target_os = "netbsd"),
+		any(
+			target_os = "linux",
+			target_os = "android",
+			target_os = "freebsd",
+			target_os = "openbsd",
+			target_os = "netbsd"
+		),
 		feature = "x11"
 	)
 ))]
@@ -48,7 +53,7 @@ fn pretty_wm(raw: &str) -> String {
 }
 
 // technically android can run wayland via termux
-#[cfg(any(target_os = "linux", target_os = "android"))]
+#[cfg(all(any(target_os = "linux", target_os = "android"), feature = "wayland"))]
 fn wayland_wm(sys: &mut System) -> Option<String> {
 	use std::os::unix::net::UnixStream;
 	use std::path::PathBuf;
@@ -150,11 +155,14 @@ fn detect(#[allow(unused_variables)] sys: &mut System) -> Option<Wm> {
 
 	#[cfg(any(target_os = "linux", target_os = "android"))]
 	{
-		let wm = wayland_wm(sys).map(|name| Wm {
-			name,
-			server: Some("Wayland"),
+		let wm: Option<Wm> = None;
+		#[cfg(feature = "wayland")]
+		let wm = wm.or_else(|| {
+			wayland_wm(sys).map(|name| Wm {
+				name,
+				server: Some("Wayland"),
+			})
 		});
-
 		#[cfg(feature = "x11")]
 		let wm = wm.or_else(|| {
 			x11_wm(sys).map(|name| Wm {
@@ -162,7 +170,6 @@ fn detect(#[allow(unused_variables)] sys: &mut System) -> Option<Wm> {
 				server: Some("X11"),
 			})
 		});
-
 		#[cfg(target_os = "android")]
 		let wm = wm.or_else(|| {
 			Some(Wm {
@@ -170,7 +177,6 @@ fn detect(#[allow(unused_variables)] sys: &mut System) -> Option<Wm> {
 				server: None,
 			})
 		});
-
 		wm
 	}
 
