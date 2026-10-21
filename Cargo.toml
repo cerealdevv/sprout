@@ -1,8 +1,8 @@
 [package]
 name = "sprout-prober"
-version = "0.3.13"
+version = "0.3.14"
 edition = "2024"
-description = "sprout - system probe output"
+description = "SPROUT - System Probing Output diagnostic tool for debugging"
 license = "GPL-3.0-only"
 repository = "https://codeberg.org/cerealdevv/sprout"
 readme = "README.md"
