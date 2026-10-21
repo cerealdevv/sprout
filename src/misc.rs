@@ -1,3 +1,4 @@
+#[cfg(feature = "project")]
 pub mod git;
 pub mod prober;
 pub mod rootwrapper;

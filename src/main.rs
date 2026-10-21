@@ -53,6 +53,7 @@ fn main() {
 		("Libc", os::libc::line()),
 		("Shell", misc::shell::line(&mut sys)),
 		("Terminal", misc::terminal::line(&mut sys)),
+		#[cfg(feature = "project")]
 		("Project", misc::git::line()),
 		("DE", de),
 		("WM", wm),
