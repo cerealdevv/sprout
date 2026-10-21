@@ -49,7 +49,31 @@ fn fetch_init(_sys: &mut System) -> Option<String> {
 #[cfg(target_os = "linux")]
 fn fetch_init(sys: &mut System) -> Option<String> {
 	use crate::util::general::comm;
-	comm(sys, 1)
+	use std::path::Path;
+	let init = comm(sys, 1)?;
+	let prettyname = if init == "openrc-init" {
+		"OpenRC".to_string()
+	} else if init != "init" {
+		init
+	} else {
+		let target = std::fs::canonicalize("/sbin/init").ok()?;
+		let name = target.file_name()?.to_str()?;
+
+		match name {
+			"busybox" => "BusyBox Init".to_string(),
+			"sysvinit" => "SysVinit".to_string(),
+			"openrc-init" => "OpenRC".to_string(),
+			_ => return None,
+		}
+	};
+	let has_openrc = ["/bin/rc-status", "/sbin/rc-status", "/usr/bin/rc-status"]
+		.iter()
+		.any(|path| Path::new(path).exists());
+	if has_openrc && prettyname != "OpenRC" {
+		Some(format!("{prettyname} + OpenRC"))
+	} else {
+		Some(prettyname)
+	}
 }
 
 #[cfg(not(any(
