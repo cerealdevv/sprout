@@ -9,19 +9,25 @@ use sysinfo::System;
 fn main() {
 	if flag_set('V') {
 		let x11 = cfg!(feature = "x11");
+		let wayland = cfg!(feature = "wayland");
+		let project = cfg!(feature = "project");
 		let verbosity = cfg!(feature = "verbosity");
 		let preset = if cfg!(feature = "default") {
 			"Default"
 		} else if cfg!(feature = "nox11") {
 			"No X11"
+		} else if cfg!(feature = "nowayland") {
+			"No Wayland"
 		} else {
 			"Custom"
 		};
-		println!("Prober:    {}", misc::prober::line());
-		println!("Preset:    {preset}");
-		println!("X11:       {x11}");
-		println!("Verbosity: {verbosity}");
-		println!("Flags:     true");
+		println!("Prober:         {}", misc::prober::line());
+		println!("Preset:         {preset}");
+		println!("X11:            {x11}");
+		println!("Wayland:        {wayland}");
+		println!("Verbosity:      {verbosity}");
+		println!("Project Module: {project}");
+		println!("Flags:          true");
 		return;
 	}
 	let mut sys = System::new();
