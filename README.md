@@ -43,3 +43,44 @@ sprout has recently changes its versioning behind the scenes, the public facing 
 however, to make nix packaging easier, we have dropped the -wip prefix officially, now, in development
 versions change the PATCH field of the cargo version, it changes after each commit and resets to zero
 after a MINOR or MAJOR field change.
+
+## Packaging
+```
+╭───────┬────────────┬──────────────┬─────────────────────┬────────────┬───────╮
+│Format │Repository  │Type          │Libc/Architecture    │Maintenance │Suffix │
+├───────┼────────────┼──────────────┼─────────────────────┼────────────┼───────┤
+│Cargo  │crates.io   │release       │any supported        │yes         │-cargo │
+├───────┼────────────┼──────────────┼─────────────────────┼────────────┼───────┤
+│AUR    │local       │release & git │x86_64/aarch64 glibc │yes         │-AUR   │
+├───────┼────────────┼──────────────┼─────────────────────┼────────────┼───────┤
+│make   │local       │git           │any supported        │yes         │-make  │
+├───────┼────────────┼──────────────┼─────────────────────┼────────────┼───────┤
+│Gentoo │local       │release & git │any supported        │yes         │-gentoo│
+├───────┼────────────┼──────────────┼─────────────────────┼────────────┼───────┤
+│Nix    │local       │release & git │any supported        │yes         │-nix   │
+├───────┼────────────┼──────────────┼─────────────────────┼────────────┼───────┤
+│APK    │local       │release       │any supported; musl  │yes         │-apk   │
+├───────┼────────────┼──────────────┼─────────────────────┼────────────┼───────┤
+│XBPS   │local       │release       │any supported        │yes         │-void  │
+╰───────┴────────────┴──────────────┴─────────────────────┴────────────┴───────╯
+```
+
+```
+╭───────┬────────────────┬──────────────────────────────┬───────────────────────╮
+│Format │Repository host │Link                          │Note                   │
+├───────┼────────────────┼──────────────────────────────┼───────────────────────┤
+│Cargo  │crates.io       │crates.io/crates/sprout-prober│none                   │
+├───────┼────────────────┼──────────────────────────────┼───────────────────────┤
+│AUR    │codeberg.org    │codeberg.org/cerealbox/arch   │soon aur.archlinux.org │
+├───────┼────────────────┼──────────────────────────────┼───────────────────────┤
+│make   │codeberg.org    │codeberg.org/cerealdevv/sprout│not "packaging"        │
+├───────┼────────────────┼──────────────────────────────┼───────────────────────┤
+│Gentoo │codeberg.org    │codeberg.org/cerealbox/gentoo │maybe soon GURU?       │
+├───────┼────────────────┼──────────────────────────────┼───────────────────────┤
+│Nix    │codeberg.org    │codeberg.org/cerealdevv/sprout│soon in nixpkgs        │
+├───────┼────────────────┼──────────────────────────────┼───────────────────────┤
+│APK    │codeberg.org    │codeberg.org/cerealbox/alpine │none                   │
+├───────┼────────────────┼──────────────────────────────┼───────────────────────┤
+│XBPS   │codeberg.org    │codeberg.org/cerealbox/void   │none                   │
+╰───────┴────────────────┴──────────────────────────────┴───────────────────────╯
+```
