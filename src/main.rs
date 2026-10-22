@@ -3,6 +3,8 @@ mod hardware;
 mod misc;
 mod os;
 mod util;
+#[cfg(feature = "verbosity")]
+mod verbose;
 
 use flags::flag_set;
 use sysinfo::System;
@@ -50,9 +52,14 @@ fn main() {
 		None => w.name,
 	});
 	let lines = [
+		#[cfg(feature = "verbosity")]
+		("User", flag_set('v').then(verbose::user::line).flatten()),
 		("OS", Some(os::name::line())),
 		#[cfg(feature = "verbosity")]
-		("OS Family", flag_set('v').then(os::family::line).flatten()),
+		(
+			"OS Family",
+			flag_set('v').then(verbose::family::line).flatten(),
+		),
 		("Kernel", Some(os::kernel::line())),
 		("Init", os::init::line(&mut sys)),
 		("SDK", sdk),

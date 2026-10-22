@@ -3,12 +3,9 @@ use toml::Table;
 
 type LangFetcher = fn() -> Option<String>;
 
-const LANGUAGES: &[LangFetcher] = &[fetch_rust, fetch_python, fetch_aur, fetch_csharp];
+const LANGUAGES: &[LangFetcher] = &[fetch_rust, fetch_python, fetch_aur, fetch_apk, fetch_csharp];
 
 fn fetch() -> Vec<String> {
-	if !matches!(fs::exists(".git"), Ok(true)) {
-		return Vec::new();
-	}
 	LANGUAGES.iter().filter_map(|f| f()).collect()
 }
 
@@ -32,11 +29,19 @@ fn fetch_python() -> Option<String> {
 	Some(format!("{name} v{version} (Python)"))
 }
 
-fn fetch_aur() -> Option<String> {
-	let content = fs::read_to_string("PKGBUILD").ok()?;
+fn fetch_pkgbuild(recipe: &str, rtype: &str) -> Option<String> {
+	let content = fs::read_to_string(recipe).ok()?;
 	let name = pkgbuild_var(&content, "pkgbase").or_else(|| pkgbuild_var(&content, "pkgname"))?;
 	let version = pkgbuild_var(&content, "pkgver")?;
-	Some(format!("{name} v{version} (AUR)"))
+	Some(format!("{name} v{version} ({rtype})"))
+}
+
+fn fetch_aur() -> Option<String> {
+	fetch_pkgbuild("PKGBUILD", "AUR")
+}
+
+fn fetch_apk() -> Option<String> {
+	fetch_pkgbuild("APKBUILD", "APK")
 }
 
 fn pkgbuild_var(content: &str, key: &str) -> Option<String> {
